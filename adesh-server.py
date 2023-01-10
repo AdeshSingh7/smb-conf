@@ -1,7 +1,8 @@
 #!/usr/bin/python
-import socket, functools, socketserver, http.server
+import os, socket, functools, socketserver, http.server
 
-host = 'localhost'
+hosts = os.popen('hostname -I').read().strip()
+host = hosts[0:15]
 port = 8080
 
 try:
