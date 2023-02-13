@@ -1,9 +1,18 @@
+#!/usr/bin/python3
 import os
 
 def install_samba():
     os.system(f"sudo apt-get -y update")
     os.system(f"sudo apt-get -y install samba samba-common-bin")
+    os.system(f"sudo apt-get -y install --reinstall gvfs-backends")
     os.system(f"sudo apt-get -y autoremove")
+
+def create_user(username, password):
+    # Create the Linux user account
+    os.system(f"sudo useradd {username}")
+    os.system(f"echo {username}:{password} | sudo chpasswd")
+    # Create the Samba user account
+    os.system(f"sudo smbpasswd -a {username}")
 
 def configure_samba(shared_path, username):
     # Create a backup of the original Samba configuration file
@@ -13,11 +22,11 @@ def configure_samba(shared_path, username):
         f.write(f"[global]\n")
         f.write(f"workgroup = WORKGROUP\n")
         f.write(f"server string = Samba Server %v\n")
-        f.write(f"netbios name = ubuntu_nas\n")
+        f.write(f"netbios name = smb_server\n")
         f.write(f"security = user\n")
         f.write(f"map to guest = bad user\n")
         f.write(f"\n")
-        f.write(f"[nas]\n")
+        f.write(f"[shared]\n")
         f.write(f"path = {shared_path}\n")
         f.write(f"browsable = yes\n")
         f.write(f"writable = yes\n")
@@ -29,17 +38,14 @@ def configure_samba(shared_path, username):
     # Restart the Samba service
     os.system(f"sudo service smbd restart")
 
-def create_user(username, password):
-    # Create the Linux user account
-    os.system(f"sudo useradd {username}")
-    os.system(f"echo {username}:{password} | sudo chpasswd")
-    # Create the Samba user account
-    os.system(f"sudo smbpasswd -a {username}")
-
 if __name__ == "__main__":
-    install_samba()
-    shared_path = "/home/"
-    username = input("Enter a username: ")
-    password = input("Enter a password: ")
-    configure_samba(shared_path, username)
-    create_user(username, password)
+    try:
+        install_samba()
+        shared_path = input("Shared folder location: ")
+        username = input("Enter a username: ")
+        password = input("Enter a password: ")
+        create_user(username, password)
+        configure_samba(shared_path, username)
+    except KeyboardInterrupt:pass
+    except Exception:pass
+    finally:os.system("clear")
