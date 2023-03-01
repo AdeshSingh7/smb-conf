@@ -4,13 +4,10 @@ import os
 def install_samba():
     os.system(f"sudo apt-get -y update")
     os.system(f"sudo apt-get -y install samba samba-common-bin")
-    os.system(f"sudo apt-get -y install --reinstall gvfs-backends")
+    #os.system(f"sudo apt-get -y install --reinstall gvfs-backends")
     os.system(f"sudo apt-get -y autoremove")
 
-def create_user(username, password):
-    # Create the Linux user account
-    os.system(f"sudo useradd {username}")
-    os.system(f"echo {username}:{password} | sudo chpasswd")
+def create_user(username):
     # Create the Samba user account
     os.system(f"sudo smbpasswd -a {username}")
 
@@ -34,7 +31,6 @@ def configure_samba(shared_path, username):
         f.write(f"read only = no\n")
     # Create the shared directory
     os.system(f"sudo mkdir -p {shared_path}")
-    os.system(f"sudo chown -R {username}:{username} {shared_path}")
     # Restart the Samba service
     os.system(f"sudo service smbd restart")
 
@@ -43,8 +39,7 @@ if __name__ == "__main__":
         install_samba()
         shared_path = input("Shared folder location: ")
         username = input("Enter a username: ")
-        password = input("Enter a password: ")
-        create_user(username, password)
+        create_user(username)
         configure_samba(shared_path, username)
     except KeyboardInterrupt:pass
     except Exception:pass
