@@ -34,9 +34,9 @@ def configure_samba(username,shared_path):
 
 if __name__ == "__main__":
     try:
-        install_samba()
         username = input("Enter a username: ")
         shared_path = input("Shared folder location: ")
+        install_samba()
         configure_samba(username,shared_path)
     except KeyboardInterrupt:pass
     except Exception:pass
