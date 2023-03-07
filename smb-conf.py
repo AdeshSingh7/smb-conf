@@ -7,11 +7,9 @@ def install_samba():
     #os.system(f"sudo apt-get -y install --reinstall gvfs-backends")
     os.system(f"sudo apt-get -y autoremove")
 
-def create_user(username):
+def configure_samba(username,shared_path):
     # Create the Samba user account
     os.system(f"sudo smbpasswd -a {username}")
-
-def configure_samba(shared_path):
     # Create a backup of the original Samba configuration file
     os.system(f"sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.bak")
     # Create a new Samba configuration file
@@ -37,10 +35,9 @@ def configure_samba(shared_path):
 if __name__ == "__main__":
     try:
         install_samba()
-        shared_path = input("Shared folder location: ")
         username = input("Enter a username: ")
-        create_user(username)
-        configure_samba(shared_path)
+        shared_path = input("Shared folder location: ")
+        configure_samba(username,shared_path)
     except KeyboardInterrupt:pass
     except Exception:pass
     finally:os.system("clear")
