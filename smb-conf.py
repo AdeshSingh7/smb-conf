@@ -11,7 +11,7 @@ def create_user(username):
     # Create the Samba user account
     os.system(f"sudo smbpasswd -a {username}")
 
-def configure_samba(shared_path, username):
+def configure_samba(shared_path):
     # Create a backup of the original Samba configuration file
     os.system(f"sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.bak")
     # Create a new Samba configuration file
@@ -40,7 +40,7 @@ if __name__ == "__main__":
         shared_path = input("Shared folder location: ")
         username = input("Enter a username: ")
         create_user(username)
-        configure_samba(shared_path, username)
+        configure_samba(shared_path)
     except KeyboardInterrupt:pass
     except Exception:pass
     finally:os.system("clear")
