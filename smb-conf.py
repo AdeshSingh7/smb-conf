@@ -3,7 +3,7 @@ import os
 
 def install_samba():
     os.system(f"sudo apt-get -y update")
-    os.system(f"sudo apt-get -y install samba samba-common samba-common-bin")
+    os.system(f"sudo apt-get -y install samba")
     #os.system(f"sudo apt-get -y install --reinstall gvfs-backends")
     os.system(f"sudo apt-get -y autoremove")
 
@@ -28,7 +28,7 @@ def configure_samba(username,shared_path):
         f.write(f"guest ok = yes\n")
         f.write(f"read only = no\n")
     # Create the shared directory
-    # os.system(f"sudo mkdir -p {shared_path}")
+    os.system(f"sudo mkdir -p {shared_path}")
     # Restart the Samba service
     os.system(f"sudo service smbd restart")
 
